@@ -7,7 +7,7 @@
 int main()
 {
     // Initialize array with arbitrary numbers
-    double X[] = {(double)5/3, CONST_PI, INFINITY };
+    double X[] = { (double)5/3, CONST_PI, INFINITY };
 
     // Define parameters for target format
     // By default it performs Round to Nearest

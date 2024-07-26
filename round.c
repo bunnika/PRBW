@@ -363,7 +363,7 @@ int toDouble(void *source, void *target, int precision, int emax)
 void doRound(double X[], int numX, int precision, int emax, int bitWidth, bool stochasticRounding)
 {
     uint64_t *custom = (uint64_t *)malloc(sizeof(uint64_t));
-    double *double_back = (double *)malloc(sizeof(double));
+    double *backDouble = (double *)malloc(sizeof(double));
 
     for (int i = 0; i < numX; ++i)
     {
@@ -376,13 +376,13 @@ void doRound(double X[], int numX, int precision, int emax, int bitWidth, bool s
             toCustomRN(&X[i], custom, precision, emax);
         }
 
-        toDouble(custom, double_back, precision, emax);
+        toDouble(custom, backDouble, precision, emax);
 
         printf("Original Value (binary64) : %.15e\n", X[i]);
-        printf("Rounded Value (binaryCP)  : %.15e\n", *double_back);
+        printf("Rounded Value (binaryCP)  : %.15e\n", *backDouble);
         printf("\n");
     }
 
     free(custom);
-    free(double_back);
+    free(backDouble);
 }
