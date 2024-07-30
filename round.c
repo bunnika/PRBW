@@ -236,17 +236,14 @@ int toCustomSR(void *source, void *target, int precision, int emax, int bitWidth
 
             uint64_t customLeastSignificandMask = outMask(0, customSignificandNormalised);
             customLeastSignificand = d & customLeastSignificandMask;
-            printf("Custom Least Significand: 0x%016llx\n", customLeastSignificand);
 
             //INITRAND(time(NULL));
             INITRAND(clock());
             uint64_t customRandomDouble = randomDouble();
             customRandomLeastSignificand = customRandomDouble & customLeastSignificandMask;
-            printf("Custom Random Least Significand: 0x%016llx\n", customRandomLeastSignificand);
 
             uint64_t customBitWidthMask = outMask(customSignificandNormalised - bitWidth, customSignificandNormalised);
             uint64_t customBitWidth = customRandomLeastSignificand & customBitWidthMask;
-            printf("Random 64-bit Custom Bit-Width: 0x%016llx\n", customBitWidth);
 
             if (customRandomLeastSignificand < customLeastSignificand)
             {
