@@ -236,16 +236,19 @@ int toCustomSR(void *source, void *target, int precision, int emax, int bitWidth
 
             uint64_t customLeastSignificandMask = outMask(0, customSignificandNormalised);
             customLeastSignificand = d & customLeastSignificandMask;
+            printf("Custom Least Significand: 0x%016llx\n", customLeastSignificand);
 
-            INITRAND(time(NULL));
+            //INITRAND(time(NULL));
+            INITRAND(clock());
             uint64_t customRandomDouble = randomDouble();
             customRandomLeastSignificand = customRandomDouble & customLeastSignificandMask;
+            printf("Custom Random Least Significand: 0x%016llx\n", customRandomLeastSignificand);
 
             uint64_t customBitWidthMask = outMask(customSignificandNormalised - bitWidth, customSignificandNormalised);
             uint64_t customBitWidth = customRandomLeastSignificand & customBitWidthMask;
-            // printf("Random 64-bit Custom Bit-Width: 0x%016llx\n", customBitWidth);
+            printf("Random 64-bit Custom Bit-Width: 0x%016llx\n", customBitWidth);
 
-            if (customRandomLeastSignificand > customLeastSignificand)
+            if (customRandomLeastSignificand < customLeastSignificand)
             {
                 // Round significand
                 customSignificand++;
@@ -385,4 +388,41 @@ void doRound(double X[], int numX, int precision, int emax, int bitWidth, bool s
 
     free(custom);
     free(backDouble);
+}
+
+void doIteration(double X[], int numX, int precision, int emax, int bitWidth, int iterations)
+{
+    uint64_t *custom = (uint64_t *)malloc(sizeof(uint64_t));
+    double *backDouble = (double *)malloc(sizeof(double));
+
+    char fileName[32];
+    snprintf(fileName, sizeof(fileName), "output/iter%dp%demax%dbw%d", iterations, precision, emax, bitWidth);
+
+    FILE *file = fopen(fileName, "w");
+
+    if (file == NULL)
+    {
+        perror("Failed to open file");
+        free(custom);
+        return;
+    }
+
+    for (int i = 0; i < numX; ++i)
+    {
+        for (int j = 0; j < iterations; j++)
+        {
+            toCustomSR(&X[i], custom, precision, emax, bitWidth);
+            toDouble(custom, backDouble, precision, emax);
+
+            printf("Original Value (binary64) : %.15e\n", X[i]);
+            printf("Rounded Value (binaryCP)  : %.15e\n", *backDouble);
+            fprintf(file, "%.15e\n", *backDouble);
+
+            printf("\n");
+        }
+    }
+
+    free(custom);
+    free(backDouble);
+    fclose(file);
 }
