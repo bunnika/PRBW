@@ -243,9 +243,10 @@ int toCustomSR(void *source, void *target, int precision, int emax, int bitWidth
             customRandomLeastSignificand = customRandomDouble & customLeastSignificandMask;
 
             uint64_t customBitWidthMask = outMask(customSignificandNormalised - bitWidth, customSignificandNormalised);
-            uint64_t customBitWidth = customRandomLeastSignificand & customBitWidthMask;
+            uint64_t customRandomBitWidth = customRandomLeastSignificand & customBitWidthMask;
+            uint64_t customLeastSignificandBitWidth = customLeastSignificand & customBitWidthMask;
 
-            if (customRandomLeastSignificand < customLeastSignificand)
+            if (customRandomBitWidth < customLeastSignificandBitWidth)
             {
                 // Round significand
                 customSignificand++;
