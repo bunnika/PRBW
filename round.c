@@ -424,3 +424,19 @@ void doIteration(double X[], int numX, int precision, int emax, int bitWidth, in
     free(backDouble);
     fclose(file);
 }
+
+double doOneRound(double X)
+{
+    uint64_t custom;
+    double backDouble;
+
+    int precision = 11;
+    int emax = 63;
+    int bitWidth = 4;
+
+    toCustomSR(&X, &custom, precision, emax, bitWidth);
+    //toCustomRN(&X, &custom, precision, emax);
+    toDouble(&custom, &backDouble, precision, emax);
+
+    return backDouble;
+}
